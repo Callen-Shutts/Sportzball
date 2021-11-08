@@ -18,4 +18,3 @@ for i in range(0,10):
         zone_matrix.append(int_arr)
     down_matrix.append(zone_matrix)
 
-x = 1
