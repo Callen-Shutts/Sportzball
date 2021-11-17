@@ -1,6 +1,10 @@
-percentagearr = []
 import pandas as pd
-import matplotlib.pyplot as pt
+import scipy.stats
+import matplotlib.pyplot as plt
+import numpy as np
+
+percentagearr = []
+
 df = pd.read_csv("pbp-2020.csv")
 
 # sorting all of the plays by which section of the field they are in
@@ -18,3 +22,24 @@ for i in range(0,10):
         zone_matrix.append(int_arr)
     down_matrix.append(zone_matrix)
 
+
+
+curr = down_matrix[0][0]
+passssss= curr[curr['IsPass'].isin([1])]
+ruuuuuuun= curr[curr['IsRush'].isin([1])]
+yards = passssss["Yards"]
+yards2 = ruuuuuuun["Yards"]
+
+hist = np.histogram(yards, bins=100)
+hist_dist = scipy.stats.rv_histogram(hist)
+
+X = np.linspace(-8.0, 50.0, 100)
+plt.title("PDF from Template")
+plt.hist(yards, density=True, bins=100)
+plt.plot(X, hist_dist.pdf(X), label='PDF')
+plt.plot(X, hist_dist.cdf(X), label='CDF')
+plt.show()
+
+
+
+print("ppp")
