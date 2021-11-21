@@ -34,6 +34,7 @@ class Env:
         self.down_matrix = down_matrix
 
 
+
     def getYardData(self, down, yardmark, playType):
         yard_mark = yardmark//10
         curr = self.down_matrix[yard_mark][down-1]
