@@ -57,6 +57,7 @@ class Env:
         plt.hist(yardData, density=True, bins=110)
         plt.plot(X, hist_dist.pdf(X), label='PDF')
         #plt.plot(X, hist_dist.cdf(X), label='CDF')
+
         plt.show()
 
 
