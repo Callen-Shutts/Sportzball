@@ -3,9 +3,20 @@ import scipy.stats
 import matplotlib.pyplot as plt
 import numpy as np
 
+down = 3
+yardMark = 15
+playType = "Rush"
+
 percentagearr = []
 
+#Import data
 df = pd.read_csv("pbp-2020.csv")
+df1 = pd.read_csv("pbp-2019.csv")
+df2 = pd.read_csv("pbp-2018.csv")
+df3 = pd.read_csv("pbp-2017.csv")
+df =df.append(df1)
+df =df.append(df2)
+df =df.append(df3)
 
 # sorting all of the plays by which section of the field they are in
 for i in range(0,10):
@@ -24,21 +35,37 @@ for i in range(0,10):
 
 
 
-curr = down_matrix[0][0]
-passssss= curr[curr['IsPass'].isin([1])]
-ruuuuuuun= curr[curr['IsRush'].isin([1])]
-yards = passssss["Yards"]
-yards2 = ruuuuuuun["Yards"]
+def getYardData(down, yardmark, playType):
+    yardmark = yardmark//10
+    curr = down_matrix[yardmark][down-1]
 
-hist = np.histogram(yards, bins=100)
-hist_dist = scipy.stats.rv_histogram(hist)
+    if playType == "Pass":
+        passs= curr[curr['IsPass'].isin([1])]
+    else:
+        passs= curr[curr['IsRush'].isin([1])]
 
-X = np.linspace(-8.0, 50.0, 100)
-plt.title("PDF from Template")
-plt.hist(yards, density=True, bins=100)
-plt.plot(X, hist_dist.pdf(X), label='PDF')
-plt.plot(X, hist_dist.cdf(X), label='CDF')
-plt.show()
+    yardsD = passs["Yards"]
+    return yardsD
+
+def getHistogram(yardData):
+    hist = np.histogram(yardData, bins=110)
+    hist_dist = scipy.stats.rv_histogram(hist)
+    return hist_dist
+
+def plotHistogram(yardData, hist_dist):
+    X = np.linspace(-10.0, 50.0, 60)
+    plt.title("PDF from Template")
+    plt.hist(yardData, density=True, bins=110)
+    plt.plot(X, hist_dist.pdf(X), label='PDF')
+    #plt.plot(X, hist_dist.cdf(X), label='CDF')
+    plt.show()
+
+
+
+
+yardData = getYardData(down, yardMark, playType)
+histo = getHistogram(yardData)
+plotHistogram(yardData, histo)
 
 
 
