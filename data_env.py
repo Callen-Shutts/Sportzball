@@ -7,7 +7,6 @@ import numpy as np
 class Env:
 
     def __init__(self):
-
         percentagearr = []
         #Import data
         df = pd.read_csv("pbp-2020.csv")
