@@ -40,7 +40,6 @@ class Env:
         if playType == "Pass":
             data = curr[curr['IsPass'].isin([1])]
         else:
-
             data = curr[curr['IsRush'].isin([1])]
         yards = data["Yards"]
         touchdown_percent = data['IsTouchdown'].mean()
