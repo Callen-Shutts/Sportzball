@@ -1,7 +1,22 @@
-from data_env import Env
+from Sports_env import sports
+from data_env import  Env
+data = Env()
+env = sports(data)
 
-env = Env()
+thing = data.getYardData(2, 25.448, 'Rush')
 
-data, tp = env.getYardData(1, 25, 'Rush')
-hist = env.getHistogram(data)
-env.plotHistogram(data, hist)
+
+state, reward, done = env.step(0)
+print(state, reward)
+
+state, reward, done = env.step(0)
+print(state, reward)
+
+state, reward, done = env.step(0)
+print(state, reward)
+
+state, reward, done = env.step(0)
+print(state, reward)
+
+state, reward, done = env.step(0)
+print(state, reward)

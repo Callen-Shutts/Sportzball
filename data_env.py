@@ -5,7 +5,6 @@ import numpy as np
 
 
 class Env:
-
     def __init__(self):
         percentagearr = []
         #Import data
@@ -34,16 +33,15 @@ class Env:
         self.down_matrix = down_matrix
 
     def getYardData(self, down, yardmark, playType):
-        yard_mark = yardmark//10
+        yard_mark = int(yardmark//10)
         curr = self.down_matrix[yard_mark][down-1]
 
         if playType == "Pass":
             data = curr[curr['IsPass'].isin([1])]
         else:
             data = curr[curr['IsRush'].isin([1])]
-        yards = data["Yards"]
-        touchdown_percent = data['IsTouchdown'].mean()
-        return yards, touchdown_percent
+        yards = data['Yards']
+        return yards
 
     def getHistogram(self, yardData):
         hist = np.histogram(yardData, bins=110)

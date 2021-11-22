@@ -1,7 +1,7 @@
 import random
 
 class sports:
-    def __init__(self, data, down=1, fp=35, g_score=0, b_score=0, yards_to_go=0, pos = 1):
+    def __init__(self, data, down=1, fp=25, g_score=0, b_score=0, yards_to_go=10, pos=1):
         self.down = down
         self.fp = fp
         self.g_score = g_score
@@ -13,9 +13,10 @@ class sports:
 
     def step(self, action):
         play = self.play_arr[action]
-        data, odds = self.data.getYardData(self.down, self.fp, play)
+        data = self.data.getYardData(self.down, self.fp, play)
         hist = self.data.getHistogram(data)
         result = hist.rvs()
+        print(result)
         self.fp += result
         # first down check
         if self.yards_to_go - result <= 0:
@@ -24,23 +25,24 @@ class sports:
         # check if the ball was turned over on downs
         elif self.down + 1 > 4:
             # flip field and pos
-            self.fp += 100 - self.fp
+            self.fp = 100 - self.fp
             self.down = 1
             self.pos = self.pos*-1
+            self.yards_to_go = 10
         else:
             self.down += 1
-            self.yards_to_go - result
+            self.yards_to_go -= result
 
         # adding checking for TD
         reward = 6*self.pos
         done = True
+        self.pos = self.pos*-1
         if self.fp > 100:
             self.td()
-        elif random.random(0, 100) < odds*100:
-            self.td
         else:
             reward = 0
             done = False
+            self.pos = self.pos*-1
 
         return [self.state(), reward, done]
 
