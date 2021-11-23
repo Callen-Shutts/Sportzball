@@ -24,11 +24,7 @@ class sports:
             self.down = 1
         # check if the ball was turned over on downs
         elif self.down + 1 > 4:
-            # flip field and pos
-            self.fp = 100 - self.fp
-            self.down = 1
-            self.pos = self.pos*-1
-            self.yards_to_go = 10
+            self.turn_over_on_downs()
         else:
             self.down += 1
             self.yards_to_go -= result
