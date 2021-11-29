@@ -4,21 +4,28 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-class Env:
+class data_env:
     def __init__(self):
-        percentagearr = []
-        #Import data
-        df = pd.read_csv("pbp-2020.csv")
-        df1 = pd.read_csv("pbp-2019.csv")
-        df2 = pd.read_csv("pbp-2018.csv")
-        df3 = pd.read_csv("pbp-2017.csv")
-        df = df.append(df1)
-        df = df.append(df2)
-        df = df.append(df3)
 
+        YEARS = [2019, 2018, 2017]
+
+        data = pd.DataFrame()
+
+        for i in YEARS:
+            # low_memory=False eliminates a warning
+            i_data = pd.read_csv('https://github.com/nflverse/nflfastR-data/blob/master/data/' \
+                                 'play_by_play_' + str(i) + '.csv.gz?raw=True',
+                                 compression='gzip', low_memory=False)
+
+            # sort=True eliminates a warning and alphabetically sorts columns
+            data = data.append(i_data, sort=True)
+        percentagearr = []
+        # Give each row a unique index
+        data.reset_index(drop=True, inplace=True)
+        df = data
         # sorting all of the plays by which section of the field they are in
-        for i in range(0,10):
-            arr = df[df.YardLine.between(0+i*10, 10+i*10)]
+        for i in range(0, 10):
+            arr = df[df.yardline_100.between(0+i*10, 10+i*10)]
             percentagearr.append(arr)
 
         # further breaking those plays down into which down
@@ -27,7 +34,7 @@ class Env:
             zone_matrix = []
             for j in range(1, 5):
                 cur_data = percentagearr[i]
-                int_arr = cur_data[cur_data['Down'].isin([j])]
+                int_arr = cur_data[cur_data['down'].isin([j])]
                 zone_matrix.append(int_arr)
             down_matrix.append(zone_matrix)
         self.down_matrix = down_matrix
@@ -37,10 +44,15 @@ class Env:
         curr = self.down_matrix[yard_mark][down-1]
 
         if playType == "Pass":
-            data = curr[curr['IsPass'].isin([1])]
-        else:
-            data = curr[curr['IsRush'].isin([1])]
-        yards = data['Yards']
+            data = curr[curr['play_type'].str.contains('pass', na=False)]
+            yards = data['yards_gained']
+        elif playType == 'Rush':
+            data = curr[curr['play_type'].str.contains('run', na=False)]
+            yards = data['yards_gained']
+        elif playType == "Punt":
+            data = curr[curr['play_type'].str.contains('punt')]
+            yards = data['kick_distance']
+            yards = yards.dropna()
         return yards
 
     def getHistogram(self, yardData):

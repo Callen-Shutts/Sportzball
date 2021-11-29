@@ -1,4 +1,3 @@
-import random
 
 class sports:
     def __init__(self, data, down=1, fp=25, g_score=0, b_score=0, yards_to_go=10, pos=1):
