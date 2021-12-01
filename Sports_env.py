@@ -16,6 +16,7 @@ class sports:
         hist = self.data.getHistogram(data)
         result = hist.rvs()
         self.fp += result
+
         # first down check
         if self.yards_to_go - result <= 0:
             self.yards_to_go = 10

@@ -8,10 +8,10 @@ def simple_expectation(playouts, data, fp=25):
     for i in range(0, playouts):
         env = sports(data, fp=fp)
         done = False
-        state = [1]
+        state = [1, 20]
         while not done:
-            if state[0] <= 3:
-                play = random.randint(0, 1)
+            if state[0] == 4 and state[1] < 25:
+                play = random.randint(0, 2)
             else:
                 play = random.randint(0, 1)
             state, reward, done = env.step(play)

@@ -7,7 +7,7 @@ data = data_env()
 x = []
 y = []
 for fp in range(1, 100):
-    thing = simple_expectation(10, data, fp)
+    thing = simple_expectation(50, data, fp)
     x.append(fp)
     y.append(thing)
 plt.plot(x, y, 'bo')

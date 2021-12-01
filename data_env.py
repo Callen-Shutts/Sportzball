@@ -41,6 +41,7 @@ class data_env:
 
     def getYardData(self, down, yardmark, playType):
         yard_mark = int(yardmark//10)
+        yard_mark = 9 - yard_mark
         curr = self.down_matrix[yard_mark][down-1]
 
         if playType == "Pass":
