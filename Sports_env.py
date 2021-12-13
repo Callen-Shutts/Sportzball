@@ -1,6 +1,11 @@
+import gym
+from gym import spaces
+import numpy as np
 
-class sports:
+
+class sports(gym.Env):
     def __init__(self, data, down=1, fp=25, g_score=0, b_score=0, yards_to_go=10, pos=1):
+        super(sports, self).__init__()
         self.down = down
         self.fp = fp
         self.g_score = g_score
@@ -9,6 +14,8 @@ class sports:
         self.data = data
         self.play_arr = ['Pass', 'Rush', 'Punt']
         self.pos = pos
+        self.observation_space =spaces.Box(np.array([0, 0, -100, 0,0,-1]), np.array([4,100,100,100,100,1]))
+        self.action_space = spaces.Discrete(2)
 
     def step(self, action):
         play = self.play_arr[action]
@@ -39,7 +46,7 @@ class sports:
             done = False
             self.pos = self.pos*-1
 
-        return [self.state(), reward, done]
+        return self.state(), reward, done, {}
 
     def state(self):
         return [self.down, self.fp, self.yards_to_go, self.g_score, self.b_score]

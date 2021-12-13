@@ -3,15 +3,20 @@ import scipy.stats
 import matplotlib.pyplot as plt
 import numpy as np
 
+# this class holds the data and functions to process it
+# we have this different from the sports env as we want to be able to make many evs without loading the data
+# the main attribute is the down_matrix which has plays broken up into which portion of the field they occurred on
+# along with the down at which it occurred
+
 
 class data_env:
     def __init__(self):
 
-        YEARS = [2019, 2018, 2017]
+        years = [2019, 2018, 2017]
 
         data = pd.DataFrame()
 
-        for i in YEARS:
+        for i in years:
             # low_memory=False eliminates a warning
             i_data = pd.read_csv('https://github.com/nflverse/nflfastR-data/blob/master/data/' \
                                  'play_by_play_' + str(i) + '.csv.gz?raw=True',
@@ -28,7 +33,7 @@ class data_env:
             arr = df[df.yardline_100.between(0+i*10, 10+i*10)]
             percentagearr.append(arr)
 
-        # further breaking those plays down into which down
+        # further breaking those plays down into which down it occured in
         down_matrix = []
         for i in range(0, 10):
             zone_matrix = []
@@ -39,6 +44,8 @@ class data_env:
             down_matrix.append(zone_matrix)
         self.down_matrix = down_matrix
 
+
+# takes in a series of attributes describing a state and returns a series of outcomes
     def getYardData(self, down, yardmark, playType):
         yard_mark = int(yardmark//10)
         yard_mark = 9 - yard_mark
@@ -50,16 +57,20 @@ class data_env:
         elif playType == 'Rush':
             data = curr[curr['play_type'].str.contains('run', na=False)]
             yards = data['yards_gained']
-        elif playType == "Punt":
+        elif playType == "Punt" and down == 4 and yardmark > 60:
             data = curr[curr['play_type'].str.contains('punt')]
             yards = data['kick_distance']
             yards = yards.dropna()
+        else:
+            yards = [0,0,0]
         return yards
+
 
     def getHistogram(self, yardData):
         hist = np.histogram(yardData, bins=110)
         hist_dist = scipy.stats.rv_histogram(hist)
         return hist_dist
+
 
     def plotHistogram(self, yardData, hist_dist):
         X = np.linspace(-10.0, 50.0, 60)
